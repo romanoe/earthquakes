@@ -1,0 +1,87 @@
+#play-button {
+     position: absolute;
+     top: 140px;
+     left: 50px;
+     background: #f08080;
+     padding-right: 26px;
+     border-radius: 3px;
+     border: none;
+     color: white;
+     margin: 0;
+     padding: 0 12px;
+     width: 60px;
+     cursor: pointer;
+     height: 30px;
+   }
+
+   #play-button:hover {
+     background-color: #696969;
+   }
+
+
+   .typewriter p {
+     overflow: hidden; /* Ensures the content is not revealed until the animation */
+     border-right: .15em solid orange; /* The typwriter cursor */
+     white-space: nowrap; /* Keeps the content on a single line */
+     margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+     letter-spacing: .15em; /* Adjust as needed */
+     animation:
+       typing 3.5s steps(40, end),
+       blink-caret .75s step-end infinite;
+   }
+
+   /* The typing effect */
+   @keyframes typing {
+     from { width: 0 }
+     to { width: 100% }
+   }
+
+   /* The typewriter cursor effect */
+   @keyframes blink-caret {
+     from, to { border-color: transparent }
+     50% { border-color: orange; }
+   }
+
+   h1 { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } h3 { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } p { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } blockquote { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } pre { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5667px; }
+
+   p { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } h3 { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } p { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } blockquote { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } pre { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5667px; }
+
+
+   /* Create two equal columns that floats next to each other */
+   .column {
+     float: left;
+     width: 50%;
+     padding: 10px;
+     height: 300px; /* Should be removed. Only for demonstration */
+   }
+
+   /* Clear floats after the columns */
+   .row:after {
+     content: "";
+     display: table;
+     clear: both;
+   }
+
+
+   #time {
+    position: absolute;
+    width: 400px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px; /* margin is -0.5 * dimension */
+    margin-top: -25px;
+}​
+
+#details {
+  position: relative;
+  width: 400px;
+  height: 50px;
+
+  
+
+}​
+
+#title-page{
+  color: #9D5669 ;
+  }
