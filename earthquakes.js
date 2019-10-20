@@ -29,21 +29,32 @@ month[10] = "November";
 month[11] = "December";
 
 
-// Load data
-const details = [
-  "February 1968, Belice Earthquake,  death toll: 231 ",
-  "May and September 1976, Friuli earthquake, death toll: 978 ",
-  "November 1980, Irpinia earthquake, death toll:  2,483",
-  "December 1990, Carlentini earthquake, death toll: 8",
-  "September 1997, Umbria and Marche earthquake, death toll: 11",
-  "October 2002, Molise earthquake, death toll: 30",
-  "April 2009, L'Aquila earthquake, death toll: 309",
-  "May 2012, Emilia earthquake, death toll: 20"
-];
 
-
-
-
+// "May and September 1976, Friuli earthquake, death toll: 978 ",
+// "November 1980, Irpinia earthquake, death toll:  2,483",
+// "December 1990, Carlentini earthquake, death toll: 8",
+// "September 1997, Umbria and Marche earthquake, death toll: 11",
+// "October 2002, Molise earthquake, death toll: 30",
+// "April 2009, L'Aquila earthquake, death toll: 309",
+// "May 2012, Emilia earthquake, death toll: 20"
+// ,{
+//           //below in makeAnnotations has type set to d3.annotationLabel
+//           //you can add this type value below to override that default
+//           type: d3.annotationCalloutCircle,
+//           note: {
+//             label: "A different annotation type",
+//             title: "d3.annotationCalloutCircle",
+//             wrap: 190
+//           },
+//           //settings for the subject, in this case the circle radius
+//           subject: {
+//             radius: 50
+//           },
+//           x: 620,
+//           y: 150,
+//           dy: 137,
+//           dx: 102
+//         }
 let parseTime = d3.timeParse("%Y-%d-%m");
 
   // parseTime("June 30, 2015"); // Tue Jun 30 2015 00:00:00 GMT-0700 (PDT)
@@ -62,6 +73,35 @@ let projection = d3.geoMercator() //utiliser une projection standard pour aplati
 								   .center([ 12.5 , 42.5 ]) //comment centrer la carte, longitude, latitude
 								   .translate([ w/2, h/2 ]) // centrer l'image obtenue dans le svg
 								   .scale([ w/0.3 ]); // zoom, plus la valeur est petit plus le zoom est gros
+
+console.log(projection([37.763, 13.049]));
+
+                   // Load data
+                   const annotations = [
+                     {
+                       type: d3.annotationCalloutCircle,
+                       label:"February 1968, Belice Earthquake,  death toll: 231 ",
+                       title: "Belice",
+                       wrap: 190,
+
+                   }, { //settings for the subject, in this case the circle radius
+                     subject: {
+                       radius: 50
+                     },
+                     x: projection([37.763, 13.049])[0],
+                     y: projection([37.763, 13.049])[1],
+                     dy: projection([37.763, 13.049])[1],
+                     dx:  projection([37.763, 13.049])[0]
+                   }].map(function(d){ d.color = "#E8336D"; return d})
+                   ;
+
+
+
+
+
+
+
+
 //Define path generator
 let path = d3.geoPath()
 							.projection(projection);
@@ -72,6 +112,8 @@ let svg = d3.select("#map")
 						.append("svg")
 						.attr("width", w)
 						.attr("height", h);
+
+
 
 
 //Create month year text
@@ -142,9 +184,12 @@ d3.json("./data/limits_IT_regions.geojson").then(function(geojson) {
         if (year == "1968" && is1968==false) {
 
           is1968=true;
-          d3.select("#details")
-            .append("p")
-            .text(details[0])
+          const makeAnnotations = d3.annotation()
+                    .type(d3.annotationLabel)
+                    .annotations(annotations)
+          svg.append("g")
+          .attr("class", "annotation-group")
+          .call(makeAnnotations);
 
 
         } else if (year == "1976" && is1976==false) {

@@ -22,6 +22,7 @@
     "babel-preset-es2015": "^6.24.1"
   },
   "dependencies": {
-    "d3": "^5.12.0"
+    "d3": "^5.12.0",
+    "d3-svg-annotation": "^2.5.0"
   }
 }
