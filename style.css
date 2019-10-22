@@ -47,20 +47,6 @@
    p { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } h3 { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } p { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } blockquote { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } pre { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5667px; }
 
 
-   /* Create two equal columns that floats next to each other */
-   .column {
-     float: left;
-     width: 50%;
-     padding: 10px;
-   }
-
-   /* Clear floats after the columns */
-   .row:after {
-     content: "";
-     display: table;
-     clear: both;
-   }
-
 
    #time {
     position: absolute;
@@ -98,17 +84,17 @@
     	 background: transparent;
     	 box-sizing: border-box;
     	 width: 0;
-    	 height: 74px;
+    	 height: 30px;
     	 border-color: transparent transparent transparent #202020;
     	 transition: 100ms all ease;
     	 cursor: pointer;
     	 border-style: solid;
-    	 border-width: 37px 0 37px 60px;
+    	 border-width: 15px 0 15px 25px;
     }
 
      #button-play.paused {
     	 border-style: double;
-    	 border-width: 0px 0 0px 60px;
+    	 border-width: 0px 0 0px 25px;
        transition: 100ms all ease;
     }
 

@@ -6,6 +6,10 @@
     <script src="http://d3js.org/topojson.v1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
     <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.1.0/d3-annotation.min.js"></script> -->
 
     <link rel = "stylesheet" type = "text/css" href = "style.css" />
@@ -15,24 +19,23 @@
   <body>
 
     <h1><big>Earthquakes in Italy from 1960 to 2014</big></h1>
-  <div class="row">
 
-    <div class="column">
-      <div id="map"></div>
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <div id="map"></div>
+        </div>
+        <div class="col-sm align-self-center" align="center">
+          <button id='button-play'></button>
+
+          <div id="details"></div>
+
+        </div>
+      </div>
     </div>
-    <div class="column">
 
-
-
-
-  <button id='button-play'></button>
-
-
-
-      <!-- <div id="details" class = "typewriter"></div> -->
-
-    </div>
-</div>
 
 
 

@@ -1,5 +1,5 @@
 
-const url = "https://emidius.mi.ingv.it/fdsnws/event/1/query?starttime=1968-01-01T00:00:00&endtime=2014-12-31T23:59:59&orderby=time-asc&limit=4000&format=text";
+const url = "https://emidius.mi.ingv.it/fdsnws/event/1/query?starttime=1990-01-01T00:00:00&endtime=2014-12-31T23:59:59&orderby=time-asc&limit=4000&format=text";
 let playing = true;
 
 
@@ -161,6 +161,15 @@ d3.json("./data/limits_IT_regions.geojson").then(function(geojson) {
     let monthEarthquake = month[text.getMonth()];
     let year = text.getFullYear();
 
+
+    d3.select("#details").selectAll("p").remove();
+
+    d3.select("#details")
+               .append("p")
+               .text(monthEarthquake + " " + year);
+
+
+
     svg.selectAll("mycircles")
        .data(earthquakes)
        .enter()
@@ -169,28 +178,24 @@ d3.json("./data/limits_IT_regions.geojson").then(function(geojson) {
          .attr("cy",projection([+earthquakes[i].Longitude, +earthquakes[i].Latitude])[1])
          .attr("r", 0)
          .style("fill-opacity", 0.1)
-         .style("fill", "#69b3a2")
+         .style("fill", "#8C4861")
          // .style("stroke", "#69b3a2")
 
          .transition()
          .ease(d3.easeQuad)
-         .duration(1100)
+         .duration(2000)
          .attr("r", +2*earthquakes[i].Magnitude)
 
          .transition()
          .ease(d3.easeElastic)
-         .duration(400)
+         .duration(1400)
          .style("fill-opacity", 0)
          .attr("r", 0)
          .remove()
 
 
 
-    d3.select("#time").selectAll("p").remove();
 
-    d3.select("#time")
-               .append("p")
-               .text(monthEarthquake + " " + year);
 
 
 
@@ -214,7 +219,7 @@ d3.json("./data/limits_IT_regions.geojson").then(function(geojson) {
           }
 
 
-    let t = d3.timer(drawEarthquakes);
+    let t = d3.timer(drawEarthquakes,4000);
 
 
     playbutton.on("click",togglePlay);
