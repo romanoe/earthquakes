@@ -1,6 +1,6 @@
 
-const url = "https://emidius.mi.ingv.it/fdsnws/event/1/query?starttime=1967-01-01T00:00:00&endtime=2014-12-31T23:59:59&orderby=time-asc&limit=4000&format=text";
-
+const url = "https://emidius.mi.ingv.it/fdsnws/event/1/query?starttime=1968-01-01T00:00:00&endtime=2014-12-31T23:59:59&orderby=time-asc&limit=4000&format=text";
+let playing = true;
 
 
 
@@ -61,12 +61,9 @@ let parseTime = d3.timeParse("%Y-%d-%m");
 
 
 
-
-//Width and height of visualization
-const w = 500;
-const h = 500;
-
-
+const margin = {top:50, right:50, bottom:0, left:50},
+    w = 500 - margin.left - margin.right,
+    h= 500 - margin.top - margin.bottom;
 
 //Define map projection
 let projection = d3.geoMercator() //utiliser une projection standard pour aplatir les pôles, voir D3 projection plugin
@@ -74,30 +71,39 @@ let projection = d3.geoMercator() //utiliser une projection standard pour aplati
 								   .translate([ w/2, h/2 ]) // centrer l'image obtenue dans le svg
 								   .scale([ w/0.3 ]); // zoom, plus la valeur est petit plus le zoom est gros
 
-console.log(projection([37.763, 13.049]));
 
-                   // Load data
-                   const annotations = [
-                     {
-                       type: d3.annotationCalloutCircle,
-                       label:"February 1968, Belice Earthquake,  death toll: 231 ",
-                       title: "Belice",
-                       wrap: 190,
-
-                   }, { //settings for the subject, in this case the circle radius
-                     subject: {
-                       radius: 50
-                     },
-                     x: projection([37.763, 13.049])[0],
-                     y: projection([37.763, 13.049])[1],
-                     dy: projection([37.763, 13.049])[1],
-                     dx:  projection([37.763, 13.049])[0]
-                   }].map(function(d){ d.color = "#E8336D"; return d})
-                   ;
+// const labels = [{
+//   data: {year: 1968, deaths: 231},
+//   dx: projection([37.763, 13.049])[0],
+// 	dy: projection([37.763, 13.049])[1],
+// 	note: {align:middle}
+// }
+// ]
 
 
 
+                   // // Load data
+                   // const annotations = [
+                   //   {
+                   //     type: d3.annotationCalloutCircle,
+                   //     label:"February 1968, Belice Earthquake,  death toll: 231 ",
+                   //     title: "Belice",
+                   //     wrap: 190,
+									 //
+                   // }, { //settings for the subject, in this case the circle radius
+                   //   subject: {
+                   //     radius: 10
+                   //   },
+                   //   x: projection([37.763, 13.049])[0],
+                   //   y: projection([37.763, 13.049])[1],
+                   //   // dy: projection([37.763, 13.049])[0],
+                   //   // dx:  projection([37.763, 13.049])[1]
+                   // }].map(function(d){ d.color = "#E8336D"; return d})
+                   // ;
 
+
+
+let playbutton = d3.select("#button-play");
 
 
 
@@ -122,15 +128,16 @@ let yearText = d3.select("#time")
               .attr("width", w/2)
   						.attr("height", h/2);
 
+let totalElapsedTime = 0;
+let startTime = d3.now() - totalElapsedTime;
+
+
+let i =0;
+
+
 
 //Load in GeoJSON data
 d3.json("./data/limits_IT_regions.geojson").then(function(geojson) {
-    d3.dsv("|",url).then(function(earthquakes) {
-  // console.log("topojson",topology);
-  // let geojson = topojson.feature(topology, topology.objects.ITA_adm1);
-
-
-  // console.log("geojson", geojson)
 
   svg.selectAll("path")
       .data(geojson.features)
@@ -141,127 +148,80 @@ d3.json("./data/limits_IT_regions.geojson").then(function(geojson) {
 
 
 
+  d3.dsv("|",url).then(function(earthquakes) {
 
+    let drawEarthquakes = (elapsed) =>  {
 
-        let parseTime = d3.timeParse("%Y-%m-%d");
-        // console.log(parseTime(data[0].Time.substring(0,10)));
+    let elapsedTime = d3.now() - startTime;
+    let parseTime = d3.timeParse("%Y-%m-%d");
+    let text = earthquakes[i].Time.substring(0,10);
 
-        let i =0;
-        // If use d3.timer, get a slightly different animation
-        let t = d3.interval(function(elapsed) {
-          // console.log(earthquakes[i].Time);
-        let text = earthquakes[i].Time.substring(0,10);
+    text = parseTime(text);
 
-        text = parseTime(text);
+    let monthEarthquake = month[text.getMonth()];
+    let year = text.getFullYear();
 
-        let monthEarthquake = month[text.getMonth()];
-        let year = text.getFullYear();
+    svg.selectAll("mycircles")
+       .data(earthquakes)
+       .enter()
+       .append("circle")
+         .attr("cx", projection([+earthquakes[i].Longitude, +earthquakes[i].Latitude])[0])
+         .attr("cy",projection([+earthquakes[i].Longitude, +earthquakes[i].Latitude])[1])
+         .attr("r", 0)
+         .style("fill-opacity", 0.1)
+         .style("fill", "#69b3a2")
+         // .style("stroke", "#69b3a2")
 
-        svg.selectAll("mycircles")
-           .data(earthquakes)
-           .enter()
-           .append("circle")
-             .attr("cx", projection([+earthquakes[i].Longitude, +earthquakes[i].Latitude])[0])
-             .attr("cy",projection([+earthquakes[i].Longitude, +earthquakes[i].Latitude])[1])
-             .attr("r",0)
-             .attr("fill","#9D5669")
-             .style("fill-opacity", 1)
-             .transition()
-             .ease(d3.easeLinear)
-             .duration(3000)
-             .attr("r", 2*earthquakes[i].Magnitude)
-             .style("fill-opacity", 0.2)
-             .remove();
+         .transition()
+         .ease(d3.easeQuad)
+         .duration(1100)
+         .attr("r", +2*earthquakes[i].Magnitude)
 
-      d3.select("#time").selectAll("h1").remove();
-
-      d3.select("#time")
-                   .append("h1")
-                   .text(monthEarthquake + " " + year);
-
-
-
-        if (year == "1968" && is1968==false) {
-
-          is1968=true;
-          const makeAnnotations = d3.annotation()
-                    .type(d3.annotationLabel)
-                    .annotations(annotations)
-          svg.append("g")
-          .attr("class", "annotation-group")
-          .call(makeAnnotations);
-
-
-        } else if (year == "1976" && is1976==false) {
-          d3.select("#details").selectAll("p").remove();
-          is1976=true;
-          d3.select("#details")
-            .append("p")
-            .text(details[1]);
+         .transition()
+         .ease(d3.easeElastic)
+         .duration(400)
+         .style("fill-opacity", 0)
+         .attr("r", 0)
+         .remove()
 
 
 
-        } else if (year == "1980" && is1980==false) {
-          d3.select("#details").selectAll("p").remove();
-          is1980=true;
-          d3.select("#details")
-            .append("p")
-            .text(details[2])
-        } else if (year == "1990" && is1990==false) {
-          d3.select("#details").selectAll("p").remove();
-          is1990=true;
-          d3.select("#details")
-            .append("p")
-            .text(details[2])
-        } else if (year == "1997" && is1997==false) {
-          d3.select("#details").selectAll("p").remove();
-          is1997=true;
-          d3.select("#details")
-            .append("p")
-            .text(details[3])
-        } else if (year == "2002" && is2002==false) {
-          d3.select("#details").selectAll("p").remove();
-          is2002=true;
-          d3.select("#details")
-            .append("p")
-            .text(details[4])
-        } else if (year == "2009" && is2009==false) {
-          d3.select("#details").selectAll("p").remove();
-          is2009=true;
-          d3.select("#details")
-            .append("p")
-            .text(details[5])
-        } else if (year == "2012" && is2012==false) {
-          d3.select("#details").selectAll("p").remove();
-          is2012=true;
-          d3.select("#details")
-            .append("p")
-            .text(details[6])
-        }
+    d3.select("#time").selectAll("p").remove();
+
+    d3.select("#time")
+               .append("p")
+               .text(monthEarthquake + " " + year);
 
 
-          i = i+1
 
-        }, 500);
+      i = i+1;
 
+  }
+    let togglePlay = () => {
+
+            if (playing) {
+              playbutton.classed('paused', true);
+              playing = false;
+              totalElapsedTime = d3.now() - startTime;
+              t.stop();
+            } else {
+              playbutton.classed('paused', false);
+              playing = true;
+              startTime = d3.now() - totalElapsedTime;
+              t.restart(drawEarthquakes);
+
+            }
+          }
+
+
+    let t = d3.timer(drawEarthquakes);
+
+
+    playbutton.on("click",togglePlay);
 
 
       });
 
 
+
 });
-
-
-
-
-
-// Create a timer
-// setInterval(function() {
-//   redraw();  // call the function you created to update the chart
-// }, 1500);
-
-
-// function redraw() {
-//   // Update…
-//
-// }
