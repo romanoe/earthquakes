@@ -29,14 +29,17 @@ month[10] = "November";
 month[11] = "December";
 
 
-
+const details = [
+// "February 1968, Belice Earthquake,  death toll: 231",
 // "May and September 1976, Friuli earthquake, death toll: 978 ",
 // "November 1980, Irpinia earthquake, death toll:  2,483",
-// "December 1990, Carlentini earthquake, death toll: 8",
-// "September 1997, Umbria and Marche earthquake, death toll: 11",
-// "October 2002, Molise earthquake, death toll: 30",
-// "April 2009, L'Aquila earthquake, death toll: 309",
-// "May 2012, Emilia earthquake, death toll: 20"
+"December 1990, Carlentini earthquake, death toll: 8",
+"September 1997, Umbria and Marche earthquake, death toll: 11",
+"October 2002, Molise earthquake, death toll: 30",
+"April 2009, L'Aquila earthquake, death toll: 309",
+"May 2012, Emilia earthquake, death toll: 20"
+]
+
 // ,{
 //           //below in makeAnnotations has type set to d3.annotationLabel
 //           //you can add this type value below to override that default
@@ -62,8 +65,8 @@ let parseTime = d3.timeParse("%Y-%d-%m");
 
 
 const margin = {top:50, right:50, bottom:0, left:50},
-    w = 500 - margin.left - margin.right,
-    h= 500 - margin.top - margin.bottom;
+    w = 600 - margin.left - margin.right,
+    h= 700 - margin.top - margin.bottom;
 
 //Define map projection
 let projection = d3.geoMercator() //utiliser une projection standard pour aplatir les pôles, voir D3 projection plugin
@@ -128,6 +131,25 @@ let yearText = d3.select("#time")
               .attr("width", w/2)
   						.attr("height", h/2);
 
+//Typewriter
+let info = d3.select(".typewriter");
+
+
+// Radial gradient
+let radialGradient = svg.append("defs")
+  .append("radialGradient")
+    .attr("id", "radial-gradient");
+
+radialGradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#8C4861");
+
+radialGradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#fff");
+
+
+
 let totalElapsedTime = 0;
 let startTime = d3.now() - totalElapsedTime;
 
@@ -138,36 +160,51 @@ let i =0;
 
 //Load in GeoJSON data
 d3.json("./data/limits_IT_regions.geojson").then(function(geojson) {
+  d3.dsv("|",url).then(function(earthquakes) {
+//  let locations = earthquakes.map(d=>[d.Latitude,d.Longitude,d.EventLocationName]);
+//  let uniqueCities = locations.filter((v, i, a) => a.indexOf(v) === i);
+// console.log(uniqueCities);
 
   svg.selectAll("path")
       .data(geojson.features)
       .enter().append("path")
       .attr("d", path)
-      .style("fill-opacity",0.2)
-      .style("stroke","white");
+      .style("fill-opacity",0)
+      .style("stroke","lightgrey");
+
+
+// svg.selectAll("text")
+//     .data(uniqueCities)
+//     .enter()
+//     .append("text")
+//     .
 
 
 
-  d3.dsv("|",url).then(function(earthquakes) {
+
+
 
     let drawEarthquakes = (elapsed) =>  {
 
     let elapsedTime = d3.now() - startTime;
     let parseTime = d3.timeParse("%Y-%m-%d");
-    let text = earthquakes[i].Time.substring(0,10);
+    let date = earthquakes[i].Time.substring(0,10);
+    // let location = earthquakes[i].EventLocationName;
 
-    text = parseTime(text);
+    date = parseTime(date);
 
-    let monthEarthquake = month[text.getMonth()];
-    let year = text.getFullYear();
+    let monthEarthquake = month[date.getMonth()];
+    let year = date.getFullYear();
 
 
     d3.select("#details").selectAll("p").remove();
 
     d3.select("#details")
                .append("p")
-               .text(monthEarthquake + " " + year);
+               .text(monthEarthquake+ " "+year);
 
+
+                     // .remove();
 
 
     svg.selectAll("mycircles")
@@ -178,22 +215,43 @@ d3.json("./data/limits_IT_regions.geojson").then(function(geojson) {
          .attr("cy",projection([+earthquakes[i].Longitude, +earthquakes[i].Latitude])[1])
          .attr("r", 0)
          .style("fill-opacity", 0.1)
-         .style("fill", "#8C4861")
+
+
          // .style("stroke", "#69b3a2")
 
          .transition()
          .ease(d3.easeQuad)
-         .duration(2000)
-         .attr("r", +2*earthquakes[i].Magnitude)
+         .duration(700)
+         .style("fill", "url(#radial-gradient)")
+         .style("fill-opacity", 0.1)
+
+         .attr("r", +3*earthquakes[i].Magnitude)
+
 
          .transition()
          .ease(d3.easeElastic)
-         .duration(1400)
-         .style("fill-opacity", 0)
-         .attr("r", 0)
+         .duration(300)
+         .style("fill","url(#radial-gradient)")
+         .attr("fill-opacity", 0.1)
+         .attr("r", 2^earthquakes[i].Magnitude)
          .remove()
 
 
+
+
+
+         if (!is1990 && year == 1990 && monthEarthquake == "December") {
+
+           is1990 = true;
+           info.append("p")
+                  .text(details[0]);
+
+         } else if (!is1997 && year == 1997 && monthEarthquake == "September") {
+           info.selectAll("p").remove();
+           is1997 = true;
+           info.append("p")
+                  .text(details[1]);
+         }
 
 
 
@@ -219,7 +277,11 @@ d3.json("./data/limits_IT_regions.geojson").then(function(geojson) {
           }
 
 
-    let t = d3.timer(drawEarthquakes,4000);
+
+
+
+
+    let t = d3.interval(drawEarthquakes,1000);
 
 
     playbutton.on("click",togglePlay);

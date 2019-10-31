@@ -12,11 +12,15 @@
      width: 60px;
      cursor: pointer;
      height: 30px;
+     outline: 0 !important;
    }
 
    #play-button:hover {
      background-color: #696969;
    }
+
+
+}
 
 
    .typewriter p {
@@ -46,9 +50,23 @@
 
    p { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } h3 { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } p { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } blockquote { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } pre { font-family: Lucida Sans Typewriter, Lucida Console, monaco, Bitstream Vera Sans Mono, monospace; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5667px; }
 
+   canvas {
+     width: calc(100vmin - 10px);
+     outline: 1px solid black;
+   }
 
 
-   #time {
+
+big {
+  color: #8C4861;
+  font-family: 'Big Shoulders Text', cursive;
+  font-size: 200%;
+}
+
+
+
+
+#time {
     position: absolute;
     width: 400px;
     height: 50px;
