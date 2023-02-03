@@ -1,10 +1,10 @@
 <script>
     import {onMount} from "svelte";
     import {geoMercator, geoPath} from "d3-geo"
-    import {draw, fade} from "svelte/transition";
+    import {draw} from "svelte/transition";
     import {Column, Grid, Row} from "carbon-components-svelte";
-    import { Button } from "carbon-components-svelte";
     import PlayButton from "./PlayButton.svelte";
+    import FetchData from "./FetchData.svelte";
 
 
     // Earthquakes API url
@@ -41,8 +41,6 @@
 </script>
 
 <main>
-
-
     <Grid>
         <Row>
             <Column>
