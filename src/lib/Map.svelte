@@ -1,7 +1,10 @@
 <script>
     import {onMount} from "svelte";
     import {geoMercator, geoPath} from "d3-geo"
-    import {draw} from "svelte/transition";
+    import {draw, fade} from "svelte/transition";
+    import {Column, Grid, Row} from "carbon-components-svelte";
+    import { Button } from "carbon-components-svelte";
+    import PlayButton from "./PlayButton.svelte";
 
 
     // Earthquakes API url
@@ -9,7 +12,7 @@
 
     // Arrays storing data when fetched
     let earthquakes = [];
-    let italyBorders = [];
+    let borders = [];
 
 
     // SVG properties
@@ -20,40 +23,54 @@
 
     //Define map projection and path
     const projection = geoMercator()
-        .translate([w / 2 - 400, h + 1200 ])
+        .translate([w / 2 - 400, h + 1200])
         .scale([w / 0.25]);
 
     const path = geoPath().projection(projection)
 
     // Fetch data
-    onMount(async() => {
-        earthquakes = await fetch(url).then((response) => response.json()).then((json) => json.features)
-        italyBorders = await fetch('./data/limits_IT_regions.geojson').then((response) => response.json()).then((json => json.features))
+    onMount(async () => {
+            earthquakes = await fetch(url).then((response) => response.json()).then(json => json.features.map(c => c.geometry))
+            borders = await fetch('./data/limits_IT_regions.geojson').then((response) => response.json()).then(json => json.features)
 
-    })
+        }
 
-
-
+    )
 
 
 </script>
 
 <main>
-    <svg width={w} height={h}>
-    <!--Italy regions shapes -->
-        <g fill="white" stroke="black">
-            {#each italyBorders as feature, i}
-                <path d={path(feature)} in:draw={{ delay: i * 50, duration: 1500 }} />
-            {/each}
-        </g>
 
 
-        <g>
-            {#each earthquakes as feature, i}
-                <circle cx={projection(x)} in:draw={{ delay: i * 50, duration: 1500 }} />
-            {/each}
-        </g>
-    </svg>
+    <Grid>
+        <Row>
+            <Column>
+                <svg width={w} height={h}>
+                    <!--Italy regions shapes -->
+                    <g fill="white" stroke="black">
+                        {#each borders as border, i}
+                            <path d={path(border)} in:draw={{ delay: i * 50, duration: 1500 }}/>
+                        {/each}
+                    </g>
+
+                    <!--Earthquakes-->
+                    <g>
+                        {#each earthquakes as earthquake, i}
+                            <circle r="3" cx={projection([earthquake.coordinates[0], [earthquake.coordinates[1]]])[0]}
+                                    cy={projection([earthquake.coordinates[0], [earthquake.coordinates[1]]])[1]} ></circle>
+                        {/each}
+
+                    </g>
+                </svg>
+            </Column>
+            <Column>
+
+                <PlayButton></PlayButton>
+            </Column>
+        </Row>
+    </Grid>
+
 
 
 
