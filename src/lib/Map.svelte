@@ -4,7 +4,7 @@
     import {draw} from "svelte/transition";
     import {Column, Grid, Row} from "carbon-components-svelte";
     import PlayButton from "./PlayButton.svelte";
-    import FetchData from "./FetchData.svelte";
+    import {tweened} from "svelte/motion";
 
 
     // Earthquakes API url
@@ -30,12 +30,29 @@
 
     // Fetch data
     onMount(async () => {
-            earthquakes = await fetch(url).then((response) => response.json()).then(json => json.features.map(c => c.geometry))
+            earthquakes = await fetch(url).then((response) => response.json()).then(json => json.features)
             borders = await fetch('./data/limits_IT_regions.geojson').then((response) => response.json()).then(json => json.features)
 
         }
 
     )
+
+
+    // Animation
+    let counter = 0;
+
+    const incr = () => {counter++};
+
+    let clear
+    $: {
+        clearInterval(clear)
+        clear = setInterval(incr, 1000)
+    }
+
+
+    $: n_earthquakes = earthquakes;
+    console.log(n_earthquakes)
+
 
 
 </script>
@@ -55,16 +72,22 @@
                     <!--Earthquakes-->
                     <g>
                         {#each earthquakes as earthquake, i}
-                            <circle r="3" cx={projection([earthquake.coordinates[0], [earthquake.coordinates[1]]])[0]}
-                                    cy={projection([earthquake.coordinates[0], [earthquake.coordinates[1]]])[1]} ></circle>
+                            <circle r={Math.sqrt(earthquake.properties.mag)} cx={projection([earthquake.geometry.coordinates[0], [earthquake.geometry.coordinates[1]]])[0]}
+                                    cy={projection([earthquake.geometry.coordinates[0], [earthquake.geometry.coordinates[1]]])[1]} fill="red"></circle>
+                        {:else}
+                        <!-- this block renders when earthquakes.length === 0 -->
+                        <p>loading...</p>
                         {/each}
+
 
                     </g>
                 </svg>
             </Column>
+
+
             <Column>
 
-                <PlayButton></PlayButton>
+                            <PlayButton></PlayButton>
             </Column>
         </Row>
     </Grid>
