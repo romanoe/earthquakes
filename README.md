@@ -2,7 +2,7 @@
 Testing [Svelte](https://svelte.dev/) while discovering the major italian earthquakes in the last decades.  
 
 
-Credits to  Russell Goldenberg for the [Scrolly](https://twitter.com/russellviz/status/1432774653139984387) component and for the great [tutorial](https://www.connorrothschild.com/post/svelte-scrollytelling) by Connor Rothschild. 
+Credits to  [Russell Goldenberg](https://twitter.com/russellviz) for the [Scrolly](https://twitter.com/russellviz/status/1432774653139984387) component and for the great [tutorial](https://www.connorrothschild.com/post/svelte-scrollytelling) by Connor Rothschild. 
 
 
 ![earthquakes](https://github.com/romanoe/earthquakes/blob/master/public/img/earthquakes.gif)
