@@ -2,7 +2,7 @@
     import {onMount} from "svelte";
     import {geoMercator, geoPath} from "d3-geo";
     import {ascending} from "d3-array";
-    import {select, selectAll} from "d3-selection";
+    import {select, selectAll, pointer} from "d3-selection";
     import {draw} from "svelte/transition";
     import {Column, Grid, Row} from "carbon-components-svelte";
     import {zoom, zoomIdentity} from "d3-zoom";
@@ -88,8 +88,8 @@
     const showTooltip = (event, source_id) => {
         let tooltip = document.getElementById(source_id);
         tooltip.style.display = "block";
-        tooltip.style.left = event.pageX + 10 +  'px';
-        tooltip.style.top = event.pageY + 10 + 'px';
+        tooltip.style.left = pointer(event)[0] +  'px';
+        tooltip.style.top = pointer(event)[1]  + 'px';
     }
 
     const hideTooltip = (event, source_id) => {
@@ -159,7 +159,7 @@
                                     cx={projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[0]}
                                     cy="{projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[1]}"
                                     fill="red" stroke-width="1"
-                                    on:mousemove={showTooltip(event, earthquake.properties.source_id)}
+                                    on:mouseover={showTooltip(event, earthquake.properties.source_id)}
                                     on:mouseout={hideTooltip(event, earthquake.properties.source_id)}
                             ></circle>
                         {/each}
