@@ -1,9 +1,33 @@
 <script>
     import {onMount} from "svelte";
-    import {geoMercator, geoPath} from "d3-geo"
-    import {draw, fade} from "svelte/transition";
+    import {geoMercator, geoPath} from "d3-geo";
+    import {ascending} from "d3-array";
+    import {select, selectAll} from "d3-selection";
+    import {draw} from "svelte/transition";
     import {Column, Grid, Row} from "carbon-components-svelte";
-    import PlayButton from "./PlayButton.svelte";
+    import {zoom, zoomIdentity} from "d3-zoom";
+    import {transition} from "d3-transition";
+
+    // Scroll
+    import Scroll from "./Scrolly.svelte";
+
+    // Scroll steps
+    let currentStep;
+    const steps = [{
+            deathToll: 7,
+            name: "Terremoti dell'Emilia",
+            coordinates: [10.801449,44.718074]
+        }, {
+            deathToll: 30,
+            name: "Terremoti dell'Appennino",
+            coordinates: [13.3995,42.3498]
+        },
+        {
+            deathToll: 11,
+            name: "Terremoti Sicilia",
+            coordinates: [14.859256,38.691885]
+        }
+    ];
 
 
     // Earthquakes API url
@@ -11,52 +35,84 @@
 
     // Arrays storing data when fetched
     let earthquakes = [];
+    let biggestEarthquakes = [];
     let borders = [];
-
 
     // SVG properties
     const margin = {top: 50, right: 50, bottom: 0, left: 50},
-        w = 600 - margin.left - margin.right,
-        h = 800 - margin.top - margin.bottom;
+        w = window.innerWidth / 2 - margin.left - margin.right,
+        h = window.innerHeight - margin.top - margin.bottom;
 
 
     //Define map projection and path
     const projection = geoMercator()
-        .translate([w / 2 - 400, h + 1200])
-        .scale([w / 0.25]);
+        .translate([w / 2 - 500, 2400])
+        .scale([2500]);
 
     const path = geoPath().projection(projection)
 
-    // Fetch data
-    onMount(async () => {
-            earthquakes = await fetch(url).then((response) => response.json()).then(json => json.features)
-            borders = await fetch('./data/limits_IT_regions.geojson').then((response) => response.json()).then(json => json.features)
 
 
-        }
 
-    )
+    const doZoom = (e) => {
 
+        selectAll("path").attr("transform", e.transform);
+        selectAll("circle").attr("transform", e.transform);
 
-    // Animation
-    let counter = 0;
-
-    const incr = () => {
-
-        counter++
-
-        if (counter > 100) {
-            counter = 0;
-        }
-
-    };
-
-    let clear
-    $: {
-        clearInterval(clear)
-        clear = setInterval(incr, 100)
     }
 
+    // Zoom
+    const mapZoom = zoom().scaleExtent([1, 5]).on('zoom', doZoom);
+
+
+    const initZoom = () => {
+        select('svg')
+            .call(mapZoom);
+    }
+
+
+    const zoomTo = (coordinates) => {
+        select("svg").transition().duration(4000).call(mapZoom.transform, zoomIdentity.translate(w / 2, h / 2).scale(5).translate(-projection(coordinates)[0], -projection(coordinates)[1]));
+    }
+
+
+
+
+    // Tooltip
+    const showTooltip = (event, source_id) => {
+        let tooltip = document.getElementById(source_id);
+        tooltip.style.display = "block";
+        tooltip.style.left = event.pageX + 10 +  'px';
+        tooltip.style.top = event.pageY + 10 + 'px';
+    }
+
+    const hideTooltip = (event, source_id) => {
+        let tooltip = document.getElementById(source_id);
+        tooltip.style.display = "none";
+    }
+
+
+    // Fetch data and initialize zoom
+    onMount(async () => {
+            const temporalEarthquakes = await fetch(url).then((response) => response.json()).then(json => json.features)
+            const sortedEarthquakes = temporalEarthquakes.slice().sort((a, b) => ascending(a.properties.mag, b.properties.mag))
+            biggestEarthquakes = sortedEarthquakes.slice(-10);
+
+            borders = await fetch('./data/limits_IT_regions.geojson').then((response) => response.json()).then(json => json.features)
+
+            initZoom();
+
+
+        }
+    )
+
+    $: if (currentStep == 0) {
+        zoomTo(steps.map(d=>d.coordinates)[0]);
+    } else if (currentStep == 1) {
+        zoomTo(steps.map(d=>d.coordinates)[1]);
+    } else if (currentStep == 2) {
+        zoomTo(steps.map(d=>d.coordinates)[2]);
+    }
 
 
 </script>
@@ -65,33 +121,118 @@
     <Grid>
         <Row>
             <Column>
+
+                <div id="map">
                 <svg width={w} height={h}>
+
                     <!--Italy regions shapes -->
-                    <g fill="white" stroke="black">
+                    <g fill="white" stroke="grey" stroke-width="0.3">
                         {#each borders as border, i}
                             <path d={path(border)} in:draw={{ delay: i * 50, duration: 1500 }}/>
                         {/each}
                     </g>
 
-                    <!--Earthquakes-->
-                    <g>
-                        <circle r={Math.sqrt(earthquakes.map(d=>d.properties.mag)[counter])*3} cx={projection([earthquakes.map(d=>d.geometry.coordinates[0])[counter], [earthquakes.map(d=>d.geometry.coordinates[1])[counter]]])[0]}
-                                cy={projection([earthquakes.map(d=>d.geometry.coordinates[0])[counter], [earthquakes.map(d=>d.geometry.coordinates[1])[counter]]])[1]} fill="red"></circle>
+
+                    <g id="map">
+                        {#each biggestEarthquakes as earthquake, i}
+
+                            <circle
+                                    r="{Math.pow(1.3,earthquake.properties.mag)}"
+                                    cx={projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[0]}
+                                    cy="{projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[1]}"
+                                    fill="red" stroke-width="1"
+                            >
+                                <animate attributeName="r" from="0" to="{Math.pow(1.6,earthquake.properties.mag)}"
+                                         dur="3s" begin="0s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" from="1" to="0" dur="3s" begin="0s"
+                                         repeatCount="indefinite"/>
+                            </circle>
+
+                            <circle
+                                    r="{Math.pow(1.3,earthquake.properties.mag)}"
+                                    cx={projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[0]}
+                                    cy="{projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[1]}"
+                                    fill="red" stroke-width="1"
+                                    on:mousemove={showTooltip(event, earthquake.properties.source_id)}
+                                    on:mouseout={hideTooltip(event, earthquake.properties.source_id)}
+                            ></circle>
+                        {/each}
+
 
                     </g>
 
                 </svg>
+
+         {#each biggestEarthquakes as earthquake, i}
+             <div id={earthquake.properties.source_id} display="none" style="position: absolute; display: none;">
+                 {earthquake.properties.region} <br>
+                 {new Date(earthquake.properties.time).toLocaleDateString("fr-FR")}
+             </div>
+         {/each}
+                </div>
+
             </Column>
 
             <Column>
-                <PlayButton></PlayButton>
+
+            <h1>Terremoti italiani degli ultimi 50 anni</h1>
+                <section>
+                    <Scroll bind:value={currentStep}>
+                        {#each steps as text, i}
+                            <div class="step" class:active={currentStep === i}>
+                                <div class="step-content">
+                                    {text.name}
+                                </div>
+                            </div>
+                        {/each}
+                    </Scroll>
+                </section>
+
+
+
             </Column>
         </Row>
     </Grid>
 
-
-
-
-
+    <footer><small><code>Dati: Istituto Nazionale Geofisica et Vulcanologia</code></small></footer>
 </main>
 
+<style>
+
+    h1 {
+        margin: 50px
+    }
+    footer {
+        text-align: right;
+        right: 0;
+        bottom: 0;
+        margin: 20px;
+        position: fixed;
+    }
+
+    .step {
+        height: 90vh;
+        display: flex;
+        place-items: center;
+        justify-content: center;
+    }
+
+    .step-content {
+        background: whitesmoke;
+        color: #ccc;
+        padding: .5rem 1rem;
+        transition: background 500ms ease, color 500ms ease;
+        box-shadow: 1px 1px 10px rgba(0, 0, 0, .2);
+    }
+
+    .step.active .step-content {
+        background: white;
+        color: black;
+    }
+
+    #map {
+        position: sticky;
+        top: 10%;
+        margin: auto;
+    }
+</style>
