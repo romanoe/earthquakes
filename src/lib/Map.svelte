@@ -6,7 +6,6 @@
     import {draw} from "svelte/transition";
     import {Column, Grid, Row} from "carbon-components-svelte";
     import {zoom, zoomIdentity} from "d3-zoom";
-    import {transition} from "d3-transition";
 
     // Scroll
     import Scroll from "./Scrolly.svelte";
@@ -16,16 +15,23 @@
     const steps = [{
             deathToll: 7,
             name: "Terremoti dell'Emilia",
-            coordinates: [10.801449,44.718074]
+            coordinates: [10.801449,44.718074],
+            img: "./img/emilia.jpg",
+            caption: "La chiesa di San Martino di Tours a Buonacompra di Cento, crollata dopo le scosse del 20 maggio, Wikipedia"
         }, {
             deathToll: 30,
             name: "Terremoti dell'Appennino",
-            coordinates: [13.3995,42.3498]
-        },
+            coordinates: [13.3995,42.3498],
+            img: "./img/aquila.jpg",
+            caption: "Un ufficio del governo distrutto dal terremoto del 2009 a L'Aquila | <b>Wikipedia</b>"
+
+    },
         {
             deathToll: 11,
             name: "Terremoti Sicilia",
-            coordinates: [14.859256,38.691885]
+            coordinates: [14.859256,38.691885],
+            img: "./img/emilia.jpg",
+            caption: "L'Aquila, Abruzzo, Italy. Un ufficio del governo distrutto dal terremoto del 2009, Wikipedia"
         }
     ];
 
@@ -175,13 +181,16 @@
 
             <Column>
 
-            <h1>Terremoti italiani degli ultimi 50 anni</h1>
                 <section>
                     <Scroll bind:value={currentStep}>
-                        {#each steps as text, i}
+                        {#each steps as step, i}
                             <div class="step" class:active={currentStep === i}>
                                 <div class="step-content">
-                                    {text.name}
+                                    <h1>{step.name}</h1>
+                                    <figure>
+                                        <img src="{step.img}" alt="{step.name}" width="400px" height="550px"/>
+                                        <figcaption style="padding: 20px">{step.caption}</figcaption>
+                                    </figure>
                                 </div>
                             </div>
                         {/each}
@@ -218,11 +227,10 @@
     }
 
     .step-content {
-        background: whitesmoke;
         color: #ccc;
         padding: .5rem 1rem;
+        text-align: center;
         transition: background 500ms ease, color 500ms ease;
-        box-shadow: 1px 1px 10px rgba(0, 0, 0, .2);
     }
 
     .step.active .step-content {
@@ -235,4 +243,14 @@
         top: 10%;
         margin: auto;
     }
+
+    img {
+        object-fit: contain;
+        max-width: 100%;
+        max-height: 500px;
+        width: auto;
+        height: auto;
+    }
 </style>
+
+
