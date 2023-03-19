@@ -161,6 +161,8 @@
                                     fill="red" stroke-width="1"
                                     on:mouseover={showTooltip(event, earthquake.properties.source_id)}
                                     on:mouseout={hideTooltip(event, earthquake.properties.source_id)}
+                                    on:blur={hideTooltip(event, earthquake.properties.source_id)}
+                                    on:focus={showTooltip(event, earthquake.properties.source_id)}
                             ></circle>
                         {/each}
 
