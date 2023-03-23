@@ -52,6 +52,7 @@
     let biggestEarthquakes = [];
     let borders = [];
     let cities = [];
+    let temporalEarthquakes = [];
 
     // SVG properties
     const margin = {top: 50, right: 50, bottom: 0, left: 50},
@@ -105,12 +106,11 @@
 
     // Fetch data and initialize zoom
     onMount(async () => {
-            const temporalEarthquakes = await fetch(url).then((response) => response.json()).then(json => json.features)
+
+            temporalEarthquakes = await fetch(url).then((response) => response.json()).then(json => json.features)
             const sortedEarthquakes = temporalEarthquakes.slice().sort((a, b) => ascending(a.properties.mag, b.properties.mag))
             cities = await fetch('./data/cities.geojson').then((response) => response.json()).then(json => json.features)
             biggestEarthquakes = sortedEarthquakes.slice(-10);
-
-            console.log(biggestEarthquakes.filter(d=> d.properties.region == "Tirreno meridionale"))
 
             borders = await fetch('./data/limits_IT_regions.geojson').then((response) => response.json()).then(json => json.features)
 
@@ -150,9 +150,25 @@
 
 
                         <g id="map">
-                            {#each biggestEarthquakes as earthquake, i}
 
-                                <circle class="no-interaction"
+                            {#each temporalEarthquakes as earthquake, i}
+                                <circle
+
+                                        r="{Math.pow(1.1,earthquake.properties.mag)}"
+                                cx={projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[0]}
+                                cy="{projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[1]}"
+                                fill="#F12526" stroke-width="1" opacity="0.1"
+                                        on:mouseover={showTooltip(event, earthquake.properties.source_id)}
+                                        on:mouseout={hideTooltip(event, earthquake.properties.source_id)}
+                                        on:blur={hideTooltip(event, earthquake.properties.source_id)}
+                                        on:focus={showTooltip(event, earthquake.properties.source_id)}>
+
+                                        </circle>
+                            {/each}
+
+
+                            {#each biggestEarthquakes as earthquake, i}
+                                <circle
                                         r="{Math.pow(1.1,earthquake.properties.mag)}"
                                         cx={projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[0]}
                                         cy="{projection([earthquake.geometry.coordinates[0], earthquake.geometry.coordinates[1]])[1]}"
@@ -188,8 +204,8 @@
                                     fill="grey" stroke-width="1"
                             ></circle>
                             <text
-                                    x={projection([city.geometry.coordinates[0], city.geometry.coordinates[1]])[0] + 3}
-                                    y={projection([city.geometry.coordinates[0], city.geometry.coordinates[1]])[1] + 3}
+                                    x={projection([city.geometry.coordinates[0], city.geometry.coordinates[1]])[0] - 3}
+                                    y={projection([city.geometry.coordinates[0], city.geometry.coordinates[1]])[1] - 3}
                                     font-size="5px"
                             >
                                 {city.properties.name}
@@ -199,7 +215,7 @@
                     </svg>
 
 
-                    {#each biggestEarthquakes as earthquake, i}
+                    {#each temporalEarthquakes as earthquake, i}
                         <div id={earthquake.properties.source_id} display="none"
                              style="position: absolute; display: none;">
                             Magnitudo: <b>{earthquake.properties.mag} </b><br>
