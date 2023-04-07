@@ -91,15 +91,13 @@
     )
 
     $: if (currentStep == 0) {
-        zoomTo(steps.map(d => d.coordinates)[0], 1.3);
+        zoomTo(steps.map(d => d.coordinates)[0], 5);
     } else if (currentStep == 1) {
         zoomTo(steps.map(d => d.coordinates)[1], 5);
     } else if (currentStep == 2) {
         zoomTo(steps.map(d => d.coordinates)[2], 5);
     } else if (currentStep == 3) {
         zoomTo(steps.map(d => d.coordinates)[3], 5);
-    } else if (currentStep == 4) {
-        zoomTo(steps.map(d => d.coordinates)[4], 5);
     }
 
 
@@ -200,14 +198,14 @@
 
             <Column>
 
-                <section>
+                <section id="scroller">
                     <Scroll bind:value={currentStep}>
                         {#each steps as step, i}
 
                             <div class="step" class:active={currentStep === i}>
                                 <div class="step-content">
-                                    <h1>{step.name}</h1>
-                                    <p>{step.description}</p>
+                                    <h1>{@html step.name}</h1>
+                                    <p class="description">{@html step.description}</p>
                                     <br>
                                     <br>
                                     <figure>
@@ -229,6 +227,9 @@
 </main>
 
 <style>
+
+
+
 
     h1 {
         margin: 30px;
@@ -253,7 +254,7 @@
 
     .step-content {
         color: #ccc;
-        padding: .5rem 1rem;
+        padding: 1rem 1rem;
         margin-bottom: 100px;
         text-align: center;
         transition: background 500ms ease, color 500ms ease;
@@ -264,12 +265,20 @@
         color: black;
     }
 
+    .description {
+        font-size: 1.5em;
+    }
+
     #map {
         position: sticky;
         top: 10%;
         margin: auto;
     }
 
+    #scroller {
+        margin-top: 20px;
+        padding-top: 10%;
+    }
     img {
         object-fit: contain;
         max-width: 100%;
@@ -277,6 +286,7 @@
         width: auto;
         height: auto;
     }
+
 </style>
 
 

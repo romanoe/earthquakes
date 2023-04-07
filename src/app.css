@@ -1,7 +1,71 @@
 
 @import "@fontsource/roboto/index.css";
+@import "@fontsource/archivo/index.css";
 
 body {
     font-family: "Roboto" !important;
 }
 
+:root {
+    --background-color: hsl(0, 0%, 100%);
+    --text-color:  #F12526;
+}
+
+
+
+/* Scroll button*/
+html {
+    scroll-behavior: smooth;
+}
+
+a#scroll-btn {
+    position: absolute;
+    height: 10em;
+    width: 6.25em;
+    border: 0.5em solid  #F12526;
+    margin: auto;
+    left: 0;
+    right: 0;
+    bottom: 6.25em;
+    border-radius: 3em;
+}
+a#scroll-btn:before {
+    position: absolute;
+    content: "";
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 1.2em;
+    height: 1.2em;
+    width: 1.2em;
+    background-color:  #F12526;
+    border-radius: 50%;
+    animation: move-down 2s infinite;
+}
+@keyframes move-down {
+    80% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(5.3em);
+        opacity: 0;
+    }
+}
+a#scroll-btn:after {
+    position: absolute;
+    content: "Scopriamo insieme";
+    width: 12em;
+    display: block;
+    width: 12em;
+    text-align: center;
+    left: -4.2em;
+    bottom: -2.5em;
+    font-size: 1.6em;
+    color:  #F12526;
+    letter-spacing: 3px;
+    font-weight: 600;
+}
+
+p {
+    font-family: Archivo !important;
+}

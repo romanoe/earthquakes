@@ -1,11 +1,4 @@
 export let steps = [{
-  "id" : 1,
-  "name": "Terremoti in Italia",
-  "coordinates": [13.3995, 42.3498],
-  "img": "",
-  "caption": "",
-  "description": "I terremoti dell'Emilia nel 2012 sono stati frutto dello scontro della placca africana contro quella europea, creando una taglia lunga una quarantina di chilometri tra Ferrara et Modena. Si contano a oggi una ventina di morti e 300 feriti."
-}, {
   "id" : 2,
   "name": "Terremoti dell'Emilia",
   "coordinates": [10.801449, 44.718074],
