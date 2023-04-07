@@ -112,7 +112,7 @@
                     <svg width={w} height={h}>
 
                         <!--Italy regions shapes -->
-                        <g fill="white" stroke="grey" stroke-width="0.4">
+                        <g fill="white" stroke="grey" stroke-width="0.1">
                             {#each borders as border, i}
                                 <path d={path(border)} in:draw={{ delay: i * 50, duration: 1500 }}/>
                             {/each}
