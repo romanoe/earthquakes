@@ -8,6 +8,11 @@
     import {zoom, zoomIdentity} from "d3-zoom";
     import {steps} from '../assets/steps.js';
 
+    // Mobile
+    let mobile =  screen.width <= 760 ?  true :  false;
+
+
+
     // Scroll
     import Scroll from "./Scrolly.svelte";
 
@@ -104,6 +109,7 @@
 </script>
 
 <main>
+    {#if !mobile}
     <Grid>
         <Row>
             <Column>
@@ -223,7 +229,10 @@
         </Row>
     </Grid>
 
+
+
     <footer><small><code>Dati: Istituto Nazionale Geofisica et Vulcanologia</code></small></footer>
+    {/if}
 </main>
 
 <style>
@@ -246,7 +255,7 @@
     }
 
     .step {
-        height: 90vh;
+        height: 100%;
         display: flex;
         place-items: center;
         justify-content: center;
