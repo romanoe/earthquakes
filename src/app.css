@@ -1,9 +1,9 @@
 
-@import "@fontsource/roboto/index.css";
+@import "@fontsource/poppins/index.css";
 @import "@fontsource/archivo/index.css";
 
 body {
-    font-family: "Roboto" !important;
+    font-family: "Poppins" !important;
 }
 
 :root {

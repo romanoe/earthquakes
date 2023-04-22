@@ -242,7 +242,7 @@
 
     h1 {
         margin: 30px;
-        font-family: "Roboto";
+        font-family: "Poppins";
         color: #F12526;
     }
 

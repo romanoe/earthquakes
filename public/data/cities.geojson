@@ -3,13 +3,14 @@
 "name": "cities",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
-{ "type": "Feature", "properties": { "id": 11, "name": "Reggio Calabria" }, "geometry": { "type": "Point", "coordinates": [ 15.644703440938795, 38.102929206428641 ] } },
+{ "type": "Feature", "properties": { "id": 15, "name": "Etna" }, "geometry": { "type": "Point", "coordinates": [ 14.993957824821527, 37.750854704407772 ] } },
 { "type": "Feature", "properties": { "id": 1, "name": "Modena" }, "geometry": { "type": "Point", "coordinates": [ 10.925670125219415, 44.645979547061522 ] } },
 { "type": "Feature", "properties": { "id": 2, "name": "Ferrara" }, "geometry": { "type": "Point", "coordinates": [ 11.621081790808068, 44.836668834409785 ] } },
 { "type": "Feature", "properties": { "id": 3, "name": "L'Aquila" }, "geometry": { "type": "Point", "coordinates": [ 13.398060442567237, 42.349223979385734 ] } },
 { "type": "Feature", "properties": { "id": 5, "name": "Amatrice" }, "geometry": { "type": "Point", "coordinates": [ 13.289244646608523, 42.628981336952528 ] } },
 { "type": "Feature", "properties": { "id": 7, "name": "San Giuliano di Puglia" }, "geometry": { "type": "Point", "coordinates": [ 14.964769512645349, 41.684780489026167 ] } },
 { "type": "Feature", "properties": { "id": 8, "name": "Messina" }, "geometry": { "type": "Point", "coordinates": [ 15.553960145800227, 38.192716660578888 ] } },
-{ "type": "Feature", "properties": { "id": 10, "name": "Palermo" }, "geometry": { "type": "Point", "coordinates": [ 13.353224926565137, 38.111331744946092 ] } }
+{ "type": "Feature", "properties": { "id": 10, "name": "Palermo" }, "geometry": { "type": "Point", "coordinates": [ 13.353224926565137, 38.111331744946092 ] } },
+{ "type": "Feature", "properties": { "id": 11, "name": "Reggio Calabria" }, "geometry": { "type": "Point", "coordinates": [ 15.644703440938795, 38.102929206428641 ] } }
 ]
 }

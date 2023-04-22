@@ -17,7 +17,7 @@
     }
 
     .subtitle {
-        font-family: Courier;
+        font-family: Poppins;
         font-weight: 100;
         font-size: 2rem;
         color:  #F12526;
@@ -94,7 +94,7 @@
     {#if !mobile}
     <a id="scroll-btn" href="#scroller"></a>
     {:else}
-        <p style="color:red">Désolée ! La visualisation est disponible seulement en Desktop.</p>
+        <p style="color:red">Malheureusement la visualisation est disponible seulement en Desktop.</p>
     {/if}
 </div>
 
