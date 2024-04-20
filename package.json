@@ -14,7 +14,7 @@
     "@sveltejs/vite-plugin-svelte": "^2.5.3",
     "carbon-components-svelte": "^0.72.3",
     "svelte": "^3.59.2",
-    "vite": "^4.5.2"
+    "vite": "^4.5.3"
   },
   "dependencies": {
     "@fontsource/archivo": "^4.5.11",
